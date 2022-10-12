@@ -2,28 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.UI;
 
 using Firebase.Storage;
 using Firebase.Extensions;
-using UnityEngine.UI;
 
 public class FirebaseStorgeController : MonoBehaviour
 {
     
-    private FirebaseStorage _instance;
+    private FirebaseStorage _firebaseInstance;
+    
+    public static FirebaseStorgeController Instance
+    {
+        get;
+        private set;
+    }
+    
     
     private void Awake()
     {
-        _instance = FirebaseStorage.DefaultInstance;
+        //Singleton Pattern
+        if (Instance != this && Instance != null)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+        DontDestroyOnLoad(this); //GameManager
+        _firebaseInstance = FirebaseStorage.DefaultInstance;
     }
 
     private void Start()
     {
-        DownloadImage("gs://cg-02-6e2c8.appspot.com/Thumbnails/Image1.png");
+        DownloadImage("gs://cg-02-6e2c8.appspot.com/Thumbnails/Image2.png");
     }
 
     public void DownloadImage(string url){
-        StorageReference storageRef =  _instance.GetReferenceFromUrl(url);
+        StorageReference storageRef =  _firebaseInstance.GetReferenceFromUrl(url);
         
         // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
         const long maxAllowedSize = 1 * 1024 * 1024;
