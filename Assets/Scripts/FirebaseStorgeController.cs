@@ -11,7 +11,8 @@ public class FirebaseStorgeController : MonoBehaviour
 {
     
     private FirebaseStorage _firebaseInstance;
-    
+    private Image _downloadedImage;
+    private RawImage _downloadedRawImage;
     public static FirebaseStorgeController Instance
     {
         get;
@@ -37,6 +38,7 @@ public class FirebaseStorgeController : MonoBehaviour
     private void Start()
     {
         DownloadImage("gs://cg-02-6e2c8.appspot.com/Thumbnails/Image2.png");
+        _downloadedRawImage = GameObject.Find("Downloaded_Raw_Image").GetComponent<RawImage>();
     }
 
     public void DownloadImage(string url){
@@ -54,9 +56,9 @@ public class FirebaseStorgeController : MonoBehaviour
                 //Load the image into Unity
                 Texture2D imageTex = new Texture2D(1, 1);
                 imageTex.LoadImage(task.Result);
-                Sprite downloadedImage = Sprite.Create(imageTex,new Rect(0,0,imageTex.width,
-                    imageTex.height),new Vector2(imageTex.width/2,imageTex.height/2));
-                GameObject.Find("Downloaded_Image").GetComponent<Image>().sprite = downloadedImage;
+                
+                //Using the Raw Image Component
+                _downloadedRawImage.texture = imageTex;
             }
         });
         
