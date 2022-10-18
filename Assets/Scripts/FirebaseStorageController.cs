@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using Firebase.Storage;
 using Firebase.Extensions;
 
-public class FirebaseStorgeController : MonoBehaviour
+public class FirebaseStorageController : MonoBehaviour
 {
     
     private FirebaseStorage _firebaseInstance;
@@ -19,7 +19,7 @@ public class FirebaseStorgeController : MonoBehaviour
         Manifest, Thumbnail
     }
     
-    public static FirebaseStorgeController Instance
+    public static FirebaseStorageController Instance
     {
         get;
         private set;
