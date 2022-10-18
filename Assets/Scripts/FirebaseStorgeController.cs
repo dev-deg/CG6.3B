@@ -54,14 +54,19 @@ public class FirebaseStorgeController : MonoBehaviour
             else {
                 Debug.Log($"{storageRef.Name} finished downloading!");
                 //Load the image into Unity
-                Texture2D imageTex = new Texture2D(1, 1);
-                imageTex.LoadImage(task.Result);
-                
-                //Using the Raw Image Component
-                _downloadedRawImage.texture = imageTex;
+                StartCoroutine(LoadImage(task.Result));
             }
         });
         
+    }
+
+    IEnumerator LoadImage(byte[] byteArr)
+    {
+        Texture2D imageTex = new Texture2D(1, 1);
+        imageTex.LoadImage(byteArr);
+        //Using the Raw Image Component
+        _downloadedRawImage.texture = imageTex;
+        yield return null;
     }
     
 }
