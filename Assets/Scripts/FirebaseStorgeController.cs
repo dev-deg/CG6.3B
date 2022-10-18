@@ -12,7 +12,8 @@ public class FirebaseStorgeController : MonoBehaviour
 {
     
     private FirebaseStorage _firebaseInstance;
-    private RawImage _downloadedRawImage;
+    [SerializeField] private GameObject ThumbnailPrefab;
+    private GameObject _thumbnailContainer;
     public enum DownloadType
     {
         Manifest, Thumbnail
@@ -42,8 +43,7 @@ public class FirebaseStorgeController : MonoBehaviour
 
     private void Start()
     {
-        _downloadedRawImage = GameObject.Find("Downloaded_Raw_Image").GetComponent<RawImage>();
-        
+        _thumbnailContainer = GameObject.Find("Thumbnail_Container");
         //First download manifest.txt
         DownloadFileAsync("gs://cg-02-6e2c8.appspot.com/manifest.txt",DownloadType.Manifest);
         //Get the urls inside the manifest file
@@ -78,8 +78,14 @@ public class FirebaseStorgeController : MonoBehaviour
 
     IEnumerator LoadManifest(byte[] byteArr)
     {
+        //Converting from byte array to string
         string manifest = System.Text.Encoding.UTF8.GetString(byteArr);
-        Debug.Log(manifest);
+        //Parsing the string to separate urls
+        string[] urls = manifest.Split('\n');
+        foreach (string url in urls)
+        {
+            DownloadFileAsync(url, DownloadType.Thumbnail);
+        }
         yield return null;
     }
 
@@ -87,8 +93,13 @@ public class FirebaseStorgeController : MonoBehaviour
     {
         Texture2D imageTex = new Texture2D(1, 1);
         imageTex.LoadImage(byteArr);
-        //Using the Raw Image Component
-        _downloadedRawImage.texture = imageTex;
+        //Instantiate a new prefab
+        GameObject thumbnailPrefab =
+            Instantiate(ThumbnailPrefab, _thumbnailContainer.transform.position, 
+                Quaternion.identity,_thumbnailContainer.transform);
+        
+        //Load the image to that prefab
+        thumbnailPrefab.GetComponent<RawImage>().texture = imageTex;
         yield return null;
     }
     
