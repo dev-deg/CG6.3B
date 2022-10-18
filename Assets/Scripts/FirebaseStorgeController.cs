@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -64,6 +65,7 @@ public class FirebaseStorgeController : MonoBehaviour
                 if (filetype == DownloadType.Manifest)
                 {
                     //Load manifest
+                    StartCoroutine(LoadManifest(task.Result));
                 }else if (filetype == DownloadType.Thumbnail)
                 {
                     //Load the image into Unity
@@ -72,6 +74,13 @@ public class FirebaseStorgeController : MonoBehaviour
             }
         });
         
+    }
+
+    IEnumerator LoadManifest(byte[] byteArr)
+    {
+        string manifest = System.Text.Encoding.UTF8.GetString(byteArr);
+        Debug.Log(manifest);
+        yield return null;
     }
 
     IEnumerator LoadImage(byte[] byteArr)
