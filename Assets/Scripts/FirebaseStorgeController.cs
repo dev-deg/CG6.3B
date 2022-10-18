@@ -11,8 +11,12 @@ public class FirebaseStorgeController : MonoBehaviour
 {
     
     private FirebaseStorage _firebaseInstance;
-    private Image _downloadedImage;
     private RawImage _downloadedRawImage;
+    public enum DownloadType
+    {
+        Manifest, Thumbnail
+    }
+    
     public static FirebaseStorgeController Instance
     {
         get;
@@ -37,11 +41,15 @@ public class FirebaseStorgeController : MonoBehaviour
 
     private void Start()
     {
-        DownloadImage("gs://cg-02-6e2c8.appspot.com/Thumbnails/Image2.png");
         _downloadedRawImage = GameObject.Find("Downloaded_Raw_Image").GetComponent<RawImage>();
+        
+        //First download manifest.txt
+        DownloadFileAsync("gs://cg-02-6e2c8.appspot.com/manifest.txt",DownloadType.Manifest);
+        //Get the urls inside the manifest file
+        //Download each url and display to the user
     }
 
-    public void DownloadImage(string url){
+    public void DownloadFileAsync(string url, DownloadType filetype){
         StorageReference storageRef =  _firebaseInstance.GetReferenceFromUrl(url);
         
         // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
@@ -53,8 +61,14 @@ public class FirebaseStorgeController : MonoBehaviour
             }
             else {
                 Debug.Log($"{storageRef.Name} finished downloading!");
-                //Load the image into Unity
-                StartCoroutine(LoadImage(task.Result));
+                if (filetype == DownloadType.Manifest)
+                {
+                    //Load manifest
+                }else if (filetype == DownloadType.Thumbnail)
+                {
+                    //Load the image into Unity
+                    StartCoroutine(LoadImage(task.Result));
+                }
             }
         });
         
