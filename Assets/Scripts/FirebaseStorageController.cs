@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 using Firebase.Storage;
 using Firebase.Extensions;
+using JetBrains.Annotations;
 
 public class FirebaseStorageController : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class FirebaseStorageController : MonoBehaviour
     private FirebaseStorage _firebaseInstance;
     [SerializeField] private GameObject ThumbnailPrefab;
     private GameObject _thumbnailContainer;
+    public List<GameObject> instantiatedPrefabs;
     public enum DownloadType
     {
         Manifest, Thumbnail
@@ -43,6 +45,7 @@ public class FirebaseStorageController : MonoBehaviour
 
     private void Start()
     {
+        instantiatedPrefabs = new List<GameObject>();
         _thumbnailContainer = GameObject.Find("Thumbnail_Container");
         //First download manifest.txt
         DownloadFileAsync("gs://cg-02-6e2c8.appspot.com/manifest.txt",DownloadType.Manifest);
@@ -97,9 +100,11 @@ public class FirebaseStorageController : MonoBehaviour
         GameObject thumbnailPrefab =
             Instantiate(ThumbnailPrefab, _thumbnailContainer.transform.position, 
                 Quaternion.identity,_thumbnailContainer.transform);
-        
+        thumbnailPrefab.name = "Thumnail_" + instantiatedPrefabs.Count;
         //Load the image to that prefab
         thumbnailPrefab.GetComponent<RawImage>().texture = imageTex;
+            
+        instantiatedPrefabs.Add(thumbnailPrefab);
         yield return null;
     }
     
