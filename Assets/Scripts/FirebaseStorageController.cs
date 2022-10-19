@@ -17,6 +17,7 @@ public class FirebaseStorageController : MonoBehaviour
     [SerializeField] private GameObject ThumbnailPrefab;
     private GameObject _thumbnailContainer;
     public List<GameObject> instantiatedPrefabs;
+    public List<AssetData> DownloadedAssetData;
     public enum DownloadType
     {
         Manifest, Thumbnail
@@ -84,7 +85,12 @@ public class FirebaseStorageController : MonoBehaviour
     {
         
         XDocument manifest = XDocument.Parse(System.Text.Encoding.UTF8.GetString(byteArr));
-        
+        DownloadedAssetData = new List<AssetData>();
+        foreach (XElement xElement in manifest.Root.Elements())
+        {
+            string _id = xElement.Element("id").Value;
+            //DownloadedAssetData.Add(new AssetData(id,));
+        }
         yield return null;
     }
 
