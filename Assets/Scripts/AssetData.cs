@@ -11,9 +11,20 @@ public class AssetData
     private string _id;
     private string _name;
     private string _thumbnailUrl;
-    private string _price;
+    private float _price;
     private CURRENCY _currency;
-    private int _discount;
+    private float _discount;
+
+    public AssetData(string id, string name, string thumbnailUrl,
+        float price, CURRENCY currency, float discount)
+    {
+        ID = id;
+        Name = name;
+        ThumbnailUrl = thumbnailUrl;
+        Price = price;
+        Currency = currency;
+        Discount = discount;
+    }
 
     public string ID
     {
@@ -33,7 +44,7 @@ public class AssetData
         set => _thumbnailUrl = value;
     }
 
-    public string Price
+    public float Price
     {
         get => _price;
         set => _price = value;
@@ -45,7 +56,7 @@ public class AssetData
         set => _currency = value;
     }
 
-    public int Discount
+    public float Discount
     {
         get => _discount;
         set => _discount = value;
