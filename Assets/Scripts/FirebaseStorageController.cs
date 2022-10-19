@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -48,7 +49,7 @@ public class FirebaseStorageController : MonoBehaviour
         instantiatedPrefabs = new List<GameObject>();
         _thumbnailContainer = GameObject.Find("Thumbnail_Container");
         //First download manifest.txt
-        DownloadFileAsync("gs://cg-02-6e2c8.appspot.com/manifest.txt",DownloadType.Manifest);
+        DownloadFileAsync("gs://cg-02-6e2c8.appspot.com/manifest.xml",DownloadType.Manifest);
         //Get the urls inside the manifest file
         //Download each url and display to the user
     }
@@ -81,14 +82,9 @@ public class FirebaseStorageController : MonoBehaviour
 
     IEnumerator LoadManifest(byte[] byteArr)
     {
-        //Converting from byte array to string
-        string manifest = System.Text.Encoding.UTF8.GetString(byteArr);
-        //Parsing the string to separate urls
-        string[] urls = manifest.Split('\n');
-        foreach (string url in urls)
-        {
-            DownloadFileAsync(url, DownloadType.Thumbnail);
-        }
+        
+        XDocument manifest = XDocument.Parse(System.Text.Encoding.UTF8.GetString(byteArr));
+        
         yield return null;
     }
 
@@ -102,7 +98,7 @@ public class FirebaseStorageController : MonoBehaviour
                 Quaternion.identity,_thumbnailContainer.transform);
         thumbnailPrefab.name = "Thumnail_" + instantiatedPrefabs.Count;
         //Load the image to that prefab
-        thumbnailPrefab.GetComponent<RawImage>().texture = imageTex;
+        thumbnailPrefab.transform.GetChild(0).GetComponent<RawImage>().texture = imageTex;
             
         instantiatedPrefabs.Add(thumbnailPrefab);
         yield return null;
