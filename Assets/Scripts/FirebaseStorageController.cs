@@ -55,7 +55,7 @@ public class FirebaseStorageController : MonoBehaviour
         //Download each url and display to the user
     }
 
-    public void DownloadFileAsync(string url, DownloadType filetype){
+    public void DownloadFileAsync(string url, DownloadType filetype ){
         StorageReference storageRef =  _firebaseInstance.GetReferenceFromUrl(url);
         
         // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
@@ -88,8 +88,21 @@ public class FirebaseStorageController : MonoBehaviour
         DownloadedAssetData = new List<AssetData>();
         foreach (XElement xElement in manifest.Root.Elements())
         {
-            string _id = xElement.Element("id").Value;
-            //DownloadedAssetData.Add(new AssetData(id,));
+            string id = xElement.Element("id")?.Value;
+            string name = xElement.Element("name")?.Value;
+            string thumbnailUrl = xElement.Element("img")?.Element("url")?.Value;
+            string priceStr = xElement.Element("price")?.Element("value")?.Value;
+            float price = (priceStr != null) ? float.Parse(priceStr) : 0.0f;
+            string currencyStr = xElement.Element("price")?.Element("currency")?.Value;
+            AssetData.CURRENCY currency = (currencyStr != null)
+                ? ((currencyStr == "diamonds") ? AssetData.CURRENCY.Diamonds : AssetData.CURRENCY.Gold)
+                : AssetData.CURRENCY.Default;
+            string discountStr = xElement.Element("sale")?.Element("discount")?.Value;
+            float discount = (discountStr != null) ? float.Parse(discountStr) : 0.0f;
+            AssetData newAsset = new AssetData(id, name, thumbnailUrl, price, currency, discount);
+            Debug.Log(newAsset.ToString());
+            DownloadedAssetData.Add(newAsset);
+            DownloadFileAsync(newAsset.ThumbnailUrl, DownloadType.Thumbnail);
         }
         yield return null;
     }
