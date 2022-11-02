@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Xml.Linq;
 
 using UnityEngine;
@@ -55,7 +56,7 @@ public class FirebaseStorageController : MonoBehaviour
         //Download each url and display to the user
     }
 
-    public void DownloadFileAsync(string url, DownloadType filetype ){
+    public void DownloadFileAsync(string url, DownloadType filetype, [Optional] AssetData assetRef){
         StorageReference storageRef =  _firebaseInstance.GetReferenceFromUrl(url);
         
         // Download in memory with a maximum allowed size of 1MB (1 * 1024 * 1024 bytes)
@@ -74,7 +75,7 @@ public class FirebaseStorageController : MonoBehaviour
                 }else if (filetype == DownloadType.Thumbnail)
                 {
                     //Load the image into Unity
-                    StartCoroutine(LoadImage(task.Result));
+                    StartCoroutine(LoadImageContainer(task.Result,assetRef));
                 }
             }
         });
@@ -102,12 +103,12 @@ public class FirebaseStorageController : MonoBehaviour
             AssetData newAsset = new AssetData(id, name, thumbnailUrl, price, currency, discount);
             Debug.Log(newAsset.ToString());
             DownloadedAssetData.Add(newAsset);
-            DownloadFileAsync(newAsset.ThumbnailUrl, DownloadType.Thumbnail);
+            DownloadFileAsync(newAsset.ThumbnailUrl, DownloadType.Thumbnail,newAsset);
         }
         yield return null;
     }
 
-    IEnumerator LoadImage(byte[] byteArr)
+    IEnumerator LoadImageContainer(byte[] byteArr, AssetData dataRef)
     {
         Texture2D imageTex = new Texture2D(1, 1);
         imageTex.LoadImage(byteArr);
