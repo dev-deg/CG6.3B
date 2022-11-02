@@ -6,30 +6,30 @@ using UnityEngine;
 
 public class DataMining : MonoBehaviour
 {
+    
+    private FirebaseFirestore _db;
+    private DocumentReference _docRef;
     public enum ActionType
     {
         ButtonClicked
     }
-    private String _anonymisedUserId;
+    private readonly String _anonymisedUserId = "jkhbr28oisjv913siasd";
     private void Awake()
     {
-        _anonymisedUserId = "jkhbr28oisjv913siasd";
+        _db = FirebaseFirestore.DefaultInstance;
+        _docRef = _db.Collection("data-mining").Document();
     }
 
     public void RecordAdditionalClick()
     {
-        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
-        DocumentReference docRef = db.Collection("data-mining").Document();
-
-        DateTime date = new DateTime();
         Dictionary<string, object> city = new Dictionary<string, object>
         {
             { "User", _anonymisedUserId },
             { "Action", ActionType.ButtonClicked.ToString()},
-            { "DateTime", date.Date.ToString() }
+            { "DateTime", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") }
         };
-        docRef.SetAsync(city).ContinueWithOnMainThread(task => {
-            Debug.Log("Added action to Firestore");
+        _docRef.SetAsync(city).ContinueWithOnMainThread(task => {
+            Debug.Log($"Added {ActionType.ButtonClicked.ToString()} action to Firestore");
         });
     }
 }
