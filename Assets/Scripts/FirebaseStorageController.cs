@@ -120,7 +120,7 @@ public class FirebaseStorageController : MonoBehaviour
         //Load the image to that prefab
         thumbnailPrefab.transform.GetChild(0).GetComponent<RawImage>().texture = imageTex;
         thumbnailPrefab.transform.GetChild(1).GetComponent<TMP_Text>().text = assetRef.Name;
-        thumbnailPrefab.transform.GetChild(2).GetComponent<TMP_Text>().text = assetRef.Price.ToString() + " " 
+        thumbnailPrefab.transform.GetChild(2).GetComponent<TMP_Text>().text = assetRef.Price + " " 
             + assetRef.Currency.ToString();
         if (assetRef.Discount != 0f)
         {
