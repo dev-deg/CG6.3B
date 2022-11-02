@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using Firebase.Storage;
 using Firebase.Extensions;
 using JetBrains.Annotations;
+using TMPro;
 
 public class FirebaseStorageController : MonoBehaviour
 {
@@ -75,7 +76,7 @@ public class FirebaseStorageController : MonoBehaviour
                 }else if (filetype == DownloadType.Thumbnail)
                 {
                     //Load the image into Unity
-                    StartCoroutine(LoadImageContainer(task.Result,assetRef));
+                    StartCoroutine(LoadImageContainer(task.Result, assetRef));
                 }
             }
         });
@@ -101,14 +102,13 @@ public class FirebaseStorageController : MonoBehaviour
             string discountStr = xElement.Element("sale")?.Element("discount")?.Value;
             float discount = (discountStr != null) ? float.Parse(discountStr) : 0.0f;
             AssetData newAsset = new AssetData(id, name, thumbnailUrl, price, currency, discount);
-            Debug.Log(newAsset.ToString());
             DownloadedAssetData.Add(newAsset);
-            DownloadFileAsync(newAsset.ThumbnailUrl, DownloadType.Thumbnail,newAsset);
+            DownloadFileAsync(newAsset.ThumbnailUrl, DownloadType.Thumbnail, newAsset);
         }
         yield return null;
     }
 
-    IEnumerator LoadImageContainer(byte[] byteArr, AssetData dataRef)
+    IEnumerator LoadImageContainer(byte[] byteArr, AssetData assetRef)
     {
         Texture2D imageTex = new Texture2D(1, 1);
         imageTex.LoadImage(byteArr);
@@ -119,7 +119,18 @@ public class FirebaseStorageController : MonoBehaviour
         thumbnailPrefab.name = "Thumnail_" + instantiatedPrefabs.Count;
         //Load the image to that prefab
         thumbnailPrefab.transform.GetChild(0).GetComponent<RawImage>().texture = imageTex;
-            
+        thumbnailPrefab.transform.GetChild(1).GetComponent<TMP_Text>().text = assetRef.Name;
+        thumbnailPrefab.transform.GetChild(2).GetComponent<TMP_Text>().text = assetRef.Price.ToString() + " " 
+            + assetRef.Currency.ToString();
+        if (assetRef.Discount != 0f)
+        {
+            thumbnailPrefab.transform.GetChild(3).GetComponent<TMP_Text>().text = assetRef.Discount + "% OFF!";
+        }
+        else
+        {
+            thumbnailPrefab.transform.GetChild(3).GetComponent<TMP_Text>().enabled = false;
+        }
+        
         instantiatedPrefabs.Add(thumbnailPrefab);
         yield return null;
     }
