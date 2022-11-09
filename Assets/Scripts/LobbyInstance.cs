@@ -1,18 +1,15 @@
 using System;
+using UnityEngine;
 
 [Serializable]
 public class LobbyInstance
 {
-    public enum GAME_STATE
-    {
-        InLobby, GameRunning, GameFinished
-    }
-    private String _lobbyCode;
-    private String _player1Name;
-    private String _player2Name;
-    private GAME_STATE _gameState;
+    public String LobbyCode;
+    public String Player1Name;
+    public String Player2Name;
+    public String GameState;
 
-    public LobbyInstance(string lobbyCode, string player1Name, string player2Name, GAME_STATE gameState = GAME_STATE.InLobby)
+    public LobbyInstance(string lobbyCode, string player1Name, string player2Name, string gameState = "InLobby")
     {
         LobbyCode = lobbyCode;
         Player1Name = player1Name;
@@ -20,27 +17,8 @@ public class LobbyInstance
         GameState = gameState;
     }
 
-    public string LobbyCode
+    public String GetJson()
     {
-        get => _lobbyCode;
-        set => _lobbyCode = value;
-    }
-
-    public string Player1Name
-    {
-        get => _player1Name;
-        set => _player1Name = value;
-    }
-
-    public string Player2Name
-    {
-        get => _player2Name;
-        set => _player2Name = value;
-    }
-
-    public GAME_STATE GameState
-    {
-        get => _gameState;
-        set => _gameState = value;
+        return JsonUtility.ToJson(this);
     }
 }
