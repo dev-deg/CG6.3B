@@ -14,8 +14,10 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private GameObject _playerNameDisplay;
     private TMP_InputField _playerName;
     private TMP_InputField _playerDisplay;
+    private FirebaseDatabaseController _dbInstance;
     void Start()
     {
+        _dbInstance = FirebaseDatabaseController.Instance;
         _joinPanel.SetActive(false);
         _createPanel.SetActive(false);
         _playerName = _playerNameInput.GetComponent<TMP_InputField>();
@@ -33,16 +35,20 @@ public class LobbyManager : MonoBehaviour
         _playerDisplay.text = _playerName.text;
             switch (lobbyId)
         {
+            //Create Lobby Panel
             case 1:
+                _dbInstance.CreateLobby(new LobbyInstance("cookie-monster",_playerName.text,""));
                 _welcomePanel.SetActive(false);
                 _joinPanel.SetActive(false);
                 _createPanel.SetActive(true);
                 break;
+            //Join Lobby Panel
             case 2:
                 _welcomePanel.SetActive(false);
                 _joinPanel.SetActive(true);
                 _createPanel.SetActive(false);
                 break;
+            //Welcome Panel
             default:
                 _welcomePanel.SetActive(true);
                 _joinPanel.SetActive(false);
