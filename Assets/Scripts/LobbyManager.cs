@@ -12,14 +12,14 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private GameObject _createPanel;
     [SerializeField] private GameObject _playerNameInput;
     [SerializeField] private GameObject _playerNameDisplay;
-    private TMP_Text _playerName;
-    private TMP_Text _playerDisplay;
+    private TMP_InputField _playerName;
+    private TMP_InputField _playerDisplay;
     void Start()
     {
         _joinPanel.SetActive(false);
         _createPanel.SetActive(false);
-        _playerName = _playerNameInput.GetComponent<TMP_Text>();
-        _playerDisplay = _playerNameDisplay.GetComponent<TMP_Text>();
+        _playerName = _playerNameInput.GetComponent<TMP_InputField>();
+        _playerDisplay = _playerNameDisplay.GetComponent<TMP_InputField>();
     }
 
 
