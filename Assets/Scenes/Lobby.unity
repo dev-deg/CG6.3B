@@ -1487,8 +1487,8 @@ MonoBehaviour:
   _welcomePanel: {fileID: 1718181334}
   _joinPanel: {fileID: 313759304}
   _createPanel: {fileID: 1401581416}
-  _playerNameInput: {fileID: 938250643}
-  _playerNameDisplay: {fileID: 1472072836}
+  _playerNameInput: {fileID: 70913389}
+  _playerNameDisplay: {fileID: 546955441}
 --- !u!1 &546955441
 GameObject:
   m_ObjectHideFlags: 0
@@ -1568,7 +1568,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 546955444}
   m_TextViewport: {fileID: 574301417}
   m_TextComponent: {fileID: 1472072838}
