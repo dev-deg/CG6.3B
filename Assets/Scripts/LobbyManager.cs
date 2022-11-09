@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -15,6 +17,7 @@ public class LobbyManager : MonoBehaviour
     private TMP_InputField _playerName;
     private TMP_InputField _playerDisplay;
     private FirebaseDatabaseController _dbInstance;
+    private List<String> _uniqueCodes;
     void Start()
     {
         _dbInstance = FirebaseDatabaseController.Instance;
@@ -22,6 +25,7 @@ public class LobbyManager : MonoBehaviour
         _createPanel.SetActive(false);
         _playerName = _playerNameInput.GetComponent<TMP_InputField>();
         _playerDisplay = _playerNameDisplay.GetComponent<TMP_InputField>();
+        StartCoroutine(LoadUniqueCodes(Application.dataPath + "/Scripts/UniqueJoinCodes.xml"));
     }
 
 
@@ -55,5 +59,21 @@ public class LobbyManager : MonoBehaviour
                 _createPanel.SetActive(false);
                 break;
         }
+    }
+    
+    
+    IEnumerator LoadUniqueCodes(String path)
+    {
+        
+        XDocument doc = new XDocument(XDocument.Load(path));
+
+        Debug.Log("Doc loaded");
+        foreach (XElement xElement in doc.Root.Elements())
+        {
+            string fruit = xElement.Element("fruit")?.Value;
+            _uniqueCodes.Add(fruit);
+        }
+        print(_uniqueCodes.Count);
+        yield return null;
     }
 }

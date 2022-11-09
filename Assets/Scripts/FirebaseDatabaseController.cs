@@ -28,6 +28,6 @@ public class FirebaseDatabaseController : MonoBehaviour
     //Create a lobby instance and save it firebase real-time database
     public void CreateLobby(LobbyInstance lobby)
     {
-        print(lobby.GetJson());
+        _reference.Child("lobbyData").Child(lobby.LobbyCode).SetRawJsonValueAsync(lobby.GetJson());
     }
 }
