@@ -64,14 +64,11 @@ public class LobbyManager : MonoBehaviour
     
     IEnumerator LoadUniqueCodes(String path)
     {
-        
         XDocument doc = new XDocument(XDocument.Load(path));
-
-        Debug.Log("Doc loaded");
+        _uniqueCodes = new List<string>();
         foreach (XElement xElement in doc.Root.Elements())
         {
-            string fruit = xElement.Element("fruit")?.Value;
-            _uniqueCodes.Add(fruit);
+            _uniqueCodes.Add(xElement?.Value);
         }
         print(_uniqueCodes.Count);
         yield return null;
