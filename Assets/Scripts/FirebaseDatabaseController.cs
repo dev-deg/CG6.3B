@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase;
 using Firebase.Database;
+using Firebase.Extensions;
 
 public class FirebaseDatabaseController : MonoBehaviour
 {
@@ -29,5 +30,21 @@ public class FirebaseDatabaseController : MonoBehaviour
     public void CreateLobby(LobbyInstance lobby)
     {
         _reference.Child("lobbyData").Child(lobby.LobbyCode).SetRawJsonValueAsync(lobby.GetJson());
+    }
+
+    public void JoinLobby(String lobbyCode, String playerName)
+    {
+        _reference.Child("lobbyData").Child("banana").GetValueAsync().ContinueWithOnMainThread(task => {
+                if (task.IsFaulted) {
+                    // Handle the error...
+                    Debug.LogError("Unable to read item for RTDB");
+                }
+                else if (task.IsCompleted) {
+                    DataSnapshot snapshot = task.Result;
+                    Dictionary<String, object> dict = new Dictionary<string, object>();
+                    dict = (Dictionary<String, object>) snapshot.Value;
+                    Debug.Log(dict["Player1Name"]);
+                }
+            });
     }
 }
